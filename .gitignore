@@ -28,3 +28,88 @@ __pycache__/
 
 # pyenv
 .python-version
+
+# Local datasets
+datasets/
+dataset/
+data/
+
+# Pretrained models and checkpoints
+experiments/pretrained_models/
+experiments/*/models/
+experiments/*/training_states/
+experiments/*/visualization/
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+
+# Test and training outputs
+results/
+wandb/
+runs/
+tb_logger/
+*.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Environments and editor files
+.conda/
+venv/
+.env
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+.DS_Store
+
+# Local datasets
+datasets/
+dataset/
+data/
+
+# Pretrained models and checkpoints
+experiments/pretrained_models/
+experiments/*/models/
+experiments/*/training_states/
+experiments/*/visualization/
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+
+# Test and training outputs
+results/
+wandb/
+runs/
+tb_logger/
+*.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Local environments and editor files
+.conda/
+venv/
+.env
+.vscode/
+.idea/
+
+# Machine-specific configurations
+options/**/*.local.yml
+
+# Temporary and OS files
+*.tmp
+*.bak
+*.swp
+.DS_Store
