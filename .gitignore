@@ -113,3 +113,15 @@ options/**/*.local.yml
 *.bak
 *.swp
 .DS_Store
+
+# Local benchmark outputs
+benchmark_logs/
+
+# Local training process files
+*.pid
+*_console.log
+
+# Local temporary configurations
+*.before_wandb
+options/train/*_preflight.yml
+options/train/*_bench.yml

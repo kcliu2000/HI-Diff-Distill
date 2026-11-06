@@ -1,0 +1,135 @@
+name: smoke_HI_Diff_GoPro_Student_Lite_S1
+model_type: HI_Diff_S1
+scale: 1
+num_gpu: 1
+manual_seed: 100
+datasets:
+  train:
+    name: TrainSet
+    type: PairedImageIRDataset
+    dataroot_gt: /home/m11302124/MIMO-UNet-Wavelet/dataset/GOPRO/train/sharp
+    dataroot_lq: /home/m11302124/MIMO-UNet-Wavelet/dataset/GOPRO/train/blur
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+    use_shuffle: true
+    num_worker_per_gpu: 2
+    batch_size_per_gpu: 1
+    dataset_enlarge_ratio: 1
+    prefetch_mode: null
+    mini_batch_sizes:
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+    iters:
+    - 20000
+    - 20000
+    - 20000
+    - 20000
+    - 20000
+    - 200000
+    gt_size: 384
+    gt_sizes:
+    - 128
+    - 160
+    - 192
+    - 256
+    - 320
+    - 384
+  val:
+    name: ValSet
+    type: PairedImageIRDataset
+    dataroot_gt: /home/m11302124/MIMO-UNet-Wavelet/dataset/GOPRO/test/sharp
+    dataroot_lq: /home/m11302124/MIMO-UNet-Wavelet/dataset/GOPRO/test/blur
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+network_g:
+  type: Transformer
+  inp_channels: 3
+  out_channels: 3
+  dim: 48
+  num_blocks:
+  - 1
+  - 2
+  - 2
+  - 2
+  num_refinement_blocks: 1
+  heads:
+  - 1
+  - 2
+  - 4
+  - 8
+  ffn_expansion_factor: 2.66
+  bias: false
+  LayerNorm_type: WithBias
+  dual_pixel_task: false
+  embed_dim: 64
+  group: 4
+network_le:
+  type: latent_encoder_gelu
+  in_chans: 6
+  embed_dim: 64
+  block_num: 6
+  group: 4
+  stage: 1
+  patch_expansion: 0.5
+  channel_expansion: 4
+path:
+  pretrain_network_g: null
+  param_key_g: params
+  strict_load_g: false
+  pretrain_network_le: null
+  strict_load_le: false
+  resume_state: null
+train:
+  total_iter: 20
+  warmup_iter: -1
+  use_grad_clip: true
+  scheduler:
+    type: CosineAnnealingRestartCyclicLR
+    periods:
+    - 100000
+    - 200000
+    restart_weights:
+    - 1
+    - 1
+    eta_mins:
+    - 0.0002
+    - 1.0e-06
+  mixing_augs:
+    mixup: false
+    mixup_beta: 1.2
+    use_identity: true
+  optim_total:
+    type: AdamW
+    lr: 0.0002
+    weight_decay: 0.0001
+    betas:
+    - 0.9
+    - 0.999
+  pixel_opt:
+    type: L1Loss
+    loss_weight: 1.0
+    reduction: mean
+val:
+  val_freq: 1000
+  save_img: false
+  metrics:
+    psnr:
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+logger:
+  print_freq: 1
+  save_checkpoint_freq: 10
+  use_tb_logger: true
+  wandb:
+    project: null
+    resume_id: null
+dist_params:
+  backend: nccl
+  port: 29500
