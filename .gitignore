@@ -125,3 +125,7 @@ benchmark_logs/
 *.before_wandb
 options/train/*_preflight.yml
 options/train/*_bench.yml
+
+# Local exact-iteration smoke files
+options/train/*_ExactIter_smoke.yml
+train.py.before_*
