@@ -204,23 +204,46 @@ def train_pipeline(root_path):
 
             lq = train_data['lq']
             gt = train_data['gt']
+            teacher = train_data.get('teacher', None)
 
             if mini_batch_size < batch_size:
                 indices = random.sample(range(0, batch_size), k=mini_batch_size)
                 lq = lq[indices]
                 gt = gt[indices]
+                if teacher is not None:
+                    teacher = teacher[indices]
 
             if mini_gt_size < gt_size:
                 x0 = int((gt_size - mini_gt_size) * random.random())
                 y0 = int((gt_size - mini_gt_size) * random.random())
                 x1 = x0 + mini_gt_size
                 y1 = y0 + mini_gt_size
-                lq = lq[:,:,x0:x1,y0:y1]
-                gt = gt[:,:,x0*scale:x1*scale,y0*scale:y1*scale]
+                lq = lq[:, :, x0:x1, y0:y1]
+                gt = gt[
+                    :,
+                    :,
+                    x0 * scale:x1 * scale,
+                    y0 * scale:y1 * scale,
+                ]
+                if teacher is not None:
+                    teacher = teacher[
+                        :,
+                        :,
+                        x0 * scale:x1 * scale,
+                        y0 * scale:y1 * scale,
+                    ]
             ###-------------------------------------------
 
             # training
-            model.feed_data({'lq': lq, 'gt':gt})
+            feed_dict = {
+                'lq': lq,
+                'gt': gt,
+            }
+
+            if teacher is not None:
+                feed_dict['teacher'] = teacher
+
+            model.feed_data(feed_dict)
             model.optimize_parameters(current_iter)
             iter_timer.record()
             if current_iter == 1:

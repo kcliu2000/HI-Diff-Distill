@@ -32,7 +32,7 @@ __pycache__/
 # Local datasets
 datasets/
 dataset/
-data/
+/data/
 
 # Pretrained models and checkpoints
 experiments/pretrained_models/
@@ -73,7 +73,7 @@ venv/
 # Local datasets
 datasets/
 dataset/
-data/
+/data/
 
 # Pretrained models and checkpoints
 experiments/pretrained_models/
@@ -129,3 +129,6 @@ options/train/*_bench.yml
 # Local exact-iteration smoke files
 options/train/*_ExactIter_smoke.yml
 train.py.before_*
+
+# Local source backups
+*.before_validation_fix
