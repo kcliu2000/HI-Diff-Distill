@@ -304,6 +304,13 @@ def configure_common(config, experiment):
 
     path_opt["resume_state"] = None
 
+    # network_le is frozen during Stage 2 and is not saved in
+    # iteration checkpoints. Keep loading it from the shared
+    # Stage 1 checkpoint when resuming.
+    path_opt["ignore_resume_networks"] = [
+        "network_le",
+    ]
+
     train_opt = config["train"]
     train_opt["total_iter"] = TOTAL_ITER
     train_opt["warmup_iter"] = -1

@@ -117,6 +117,8 @@ path:
   strict_load_d: true
   resume_state: null
   param_key_le: params
+  ignore_resume_networks:
+  - network_le
 train:
   total_iter: 300000
   warmup_iter: -1

@@ -186,6 +186,13 @@ for name, expected in CONFIGS.items():
         is None
     )
 
+    assert (
+        path_opt.get(
+            "ignore_resume_networks"
+        )
+        == ["network_le"]
+    )
+
     if expected["beta"] is None:
         assert (
             "wavelet_kd_opt"
