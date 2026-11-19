@@ -1,0 +1,97 @@
+name: Student-Lite-S2-OutputWaveletKD-a075-b075-hf200-Best-Test
+model_type: HI_Diff_S2
+scale: 1
+num_gpu: 1
+manual_seed: 100
+datasets:
+  test_1:
+    name: GoPro
+    type: PairedImageIRDataset
+    dataroot_gt: /home/m11302124/MIMO-UNet-Wavelet/dataset/GOPRO/test/sharp
+    dataroot_lq: /home/m11302124/MIMO-UNet-Wavelet/dataset/GOPRO/test/blur
+    filename_tmpl: '{}'
+    io_backend:
+      type: disk
+network_g:
+  type: Transformer
+  inp_channels: 3
+  out_channels: 3
+  dim: 48
+  num_blocks:
+  - 1
+  - 2
+  - 2
+  - 2
+  num_refinement_blocks: 1
+  heads:
+  - 1
+  - 2
+  - 4
+  - 8
+  ffn_expansion_factor: 2.66
+  bias: false
+  LayerNorm_type: WithBias
+  dual_pixel_task: false
+  embed_dim: 64
+  group: 4
+network_le:
+  type: latent_encoder_gelu
+  in_chans: 6
+  embed_dim: 64
+  block_num: 6
+  group: 4
+  stage: 1
+  patch_expansion: 0.5
+  channel_expansion: 4
+network_le_dm:
+  type: latent_encoder_gelu
+  in_chans: 3
+  embed_dim: 64
+  block_num: 6
+  group: 4
+  stage: 2
+  patch_expansion: 0.5
+  channel_expansion: 4
+network_d:
+  type: denoising
+  in_channel: 256
+  out_channel: 256
+  inner_channel: 512
+  block_num: 4
+  group: 4
+  patch_expansion: 0.5
+  channel_expansion: 2
+diffusion_schedule:
+  apply_ldm: false
+  schedule: linear
+  timesteps: 8
+  linear_start: 0.1
+  linear_end: 0.99
+path:
+  pretrain_network_g: /home/m11302124/HI-Diff/experiments/Student-Lite-S2-OutputWaveletKD-a075-b075-hf200-Formal/models/net_g_290000.pth
+  param_key_g: params
+  strict_load_g: true
+  pretrain_network_le: /home/m11302124/HI-Diff/experiments/Student-Lite-S1-Formal/models/net_le_290000.pth
+  param_key_le: params
+  strict_load_le: true
+  pretrain_network_le_dm: /home/m11302124/HI-Diff/experiments/Student-Lite-S2-OutputWaveletKD-a075-b075-hf200-Formal/models/net_le_dm_290000.pth
+  param_key_le_dm: params
+  strict_load_le_dm: true
+  pretrain_network_d: /home/m11302124/HI-Diff/experiments/Student-Lite-S2-OutputWaveletKD-a075-b075-hf200-Formal/models/net_d_290000.pth
+  param_key_d: params
+  strict_load_d: true
+  resume_state: null
+val:
+  save_img: false
+  suffix: ''
+  selfensemble_testing: false
+  pbar: true
+  metrics:
+    psnr:
+      type: calculate_psnr
+      crop_border: 0
+      test_y_channel: false
+    ssim:
+      type: calculate_ssim
+      crop_border: 0
+      test_y_channel: false
